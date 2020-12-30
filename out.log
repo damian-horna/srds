@@ -1,0 +1,10 @@
+136  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
+268  INFO  c.datastax.driver.core.ClockFactory: Using native clock to generate timestamps.
+339  INFO  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport in the classpath, using it
+507  INFO  com.datastax.driver.core.Cluster: Cannot connect with protocol version V4, trying with V3
+511  INFO  com.datastax.driver.core.Cluster: Cannot connect with protocol version V3, trying with V2
+574  INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+574  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
+574  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.2:9042 added
+574  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.3:9042 added
+575  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.4:9042 added
