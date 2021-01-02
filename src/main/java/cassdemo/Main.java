@@ -31,14 +31,27 @@ public class Main {
 
 		List<Flight> flights = Arrays.asList(new Flight[]{flight});
 		List<Hotel> hotels = Arrays.asList(new Hotel[]{hotel});
-		new DbInitializer(dbService).initializeDb(flights, hotels);
 
+		initializeDb(flights, hotels, dbService);
+		runCustomers(dbService);
+		showStats();
+
+		System.exit(0);
+	}
+
+	public static void initializeDb(List<Flight> flights, List<Hotel> hotels, DbService dbService){
+		new DbInitializer(dbService).initializeDb(flights, hotels);
+	}
+
+	public static void runCustomers(DbService dbService){
 		// Create NUM_OF_CUSTOMERS threads and start fighting for resources. Each customer:
 		// 1. Looks up available seats (or groups of seats)
 		// 2. Books one of the available seats (or groups of seats) and hotel if they want
 		// At the end the app should collect statistics how many customers were successful with reservation and whether we faced some mistakes.
+	}
 
-		System.exit(0);
+	public static void showStats(){
+		System.out.println("Stats: ...");
 	}
 
 	@NotNull
