@@ -25,7 +25,7 @@ public class BackendSession {
 
 	private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
 
-	private Session session;
+	public Session session;
 
 	public BackendSession(String contactPoint, String keyspace) throws BackendException {
 
