@@ -7,6 +7,11 @@ chmod +x start.sh
 ./start.sh
 ```
 
+### Create a schema:
+```
+ccm node1 cqlsh -f schema.cql
+```
+
 # Data modelling
 ### Requirements:
 1) Ability to book a seat for a given flight for a single person
