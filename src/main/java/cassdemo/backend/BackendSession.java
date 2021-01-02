@@ -48,10 +48,10 @@ public class BackendSession {
 
 	private void prepareStatements() throws BackendException {
 		try {
-			SELECT_ALL_FROM_USERS = session.prepare("SELECT * FROM users;");
-			INSERT_INTO_USERS = session
-					.prepare("INSERT INTO users (companyName, name, phone, street) VALUES (?, ?, ?, ?);");
-			DELETE_ALL_FROM_USERS = session.prepare("TRUNCATE users;");
+//			SELECT_ALL_FROM_USERS = session.prepare("SELECT * FROM users;");
+//			INSERT_INTO_USERS = session
+//					.prepare("INSERT INTO users (companyName, name, phone, street) VALUES (?, ?, ?, ?);");
+//			DELETE_ALL_FROM_USERS = session.prepare("TRUNCATE users;");
 		} catch (Exception e) {
 			throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
 		}
