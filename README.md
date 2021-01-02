@@ -47,3 +47,6 @@ plane_seats_by_flight_and_group_size -> to book a group (1-6) of seats
 
 hotel_rooms_by_city_and_capacity -> to book one of the rooms with specified capacity in a given city 
 flights -> we need them because we'll choose one of them randomly 
+
+seat_reservations_by_customer_id -> for statistics checks at the end
+room_reservations_by_customer_id -> for statistics checks at the end
