@@ -30,6 +30,8 @@ public class Main {
 		BackendSession session = new BackendSession(contactPoint, keyspace);
 
 		Plane plane = new Plane(session, PLANE_ID, ROW_NUMBER, ROW_SIZE);
+		Hotel hotel = new Hotel(0, "Madrid", 10,10,10,10,10, 10);
+		Flight flight = new Flight(0, plane, "Warsaw", "Madrid");
 
 		System.exit(0);
 	}

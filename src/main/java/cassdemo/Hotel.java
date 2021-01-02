@@ -6,10 +6,11 @@ import java.util.List;
 public class Hotel {
     public int id;
     public List<Room> rooms = new ArrayList<>();
+    public String city;
 
-    public Hotel(int id, int numOfRooms1, int numOfRooms2, int numOfRooms3, int numOfRooms4, int numOfRooms5, int numOfRooms6) {
+    public Hotel(int id, String city, int numOfRooms1, int numOfRooms2, int numOfRooms3, int numOfRooms4, int numOfRooms5, int numOfRooms6) {
         this.id = id;
-
+        this.city = city;
         addRoomsWithCapacity(numOfRooms1);
         addRoomsWithCapacity(numOfRooms2);
         addRoomsWithCapacity(numOfRooms3);
