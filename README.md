@@ -12,6 +12,11 @@ chmod +x start.sh
 ccm node1 cqlsh -f schema.cql
 ```
 
+### Run the app:
+```
+gradle run
+```
+
 # Data modelling
 ### Requirements:
 1) Ability to book a seat for a given flight for a single person
