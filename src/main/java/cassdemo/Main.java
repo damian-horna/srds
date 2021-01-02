@@ -10,6 +10,7 @@ import cassdemo.backend.BackendSession;
 import cassdemo.domain.Flight;
 import cassdemo.domain.Hotel;
 import cassdemo.domain.Plane;
+import org.jetbrains.annotations.NotNull;
 
 public class Main {
 
@@ -20,20 +21,7 @@ public class Main {
 	private static final int NUM_OF_CUSTOMERS = 1000;
 
 	public static void main(String[] args) throws IOException, BackendException {
-		String contactPoint = null;
-		String keyspace = null;
-
-		Properties properties = new Properties();
-		try {
-			properties.load(Main.class.getClassLoader().getResourceAsStream(PROPERTIES_FILENAME));
-
-			contactPoint = properties.getProperty("contact_point");
-			keyspace = properties.getProperty("keyspace");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-			
-		BackendSession session = new BackendSession(contactPoint, keyspace);
+		BackendSession session = createBackendSession();
 
 		Plane plane = new Plane(session, PLANE_ID, ROW_NUMBER, ROW_SIZE);
 		Hotel hotel = new Hotel(0, "Madrid", 10,10,10,10,10, 10);
@@ -49,5 +37,23 @@ public class Main {
 		// At the end the app should collect statistics how many customers were successful with reservation and whether we faced some mistakes.
 
 		System.exit(0);
+	}
+
+	@NotNull
+	private static BackendSession createBackendSession() throws BackendException {
+		String contactPoint = null;
+		String keyspace = null;
+
+		Properties properties = new Properties();
+		try {
+			properties.load(Main.class.getClassLoader().getResourceAsStream(PROPERTIES_FILENAME));
+
+			contactPoint = properties.getProperty("contact_point");
+			keyspace = properties.getProperty("keyspace");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return new BackendSession(contactPoint, keyspace);
 	}
 }
