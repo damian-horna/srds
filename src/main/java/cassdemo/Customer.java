@@ -3,10 +3,12 @@ package cassdemo;
 public class Customer  implements Runnable{
     public int id;
     public int selectedUseCase;
+    public DbService dbService;
 
-    public Customer(int id, int selectedUseCase) {
+    public Customer(int id, int selectedUseCase, DbService dbService) {
         this.id = id;
         this.selectedUseCase = selectedUseCase;
+        this.dbService = dbService;
     }
 
     @Override
