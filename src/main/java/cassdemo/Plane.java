@@ -22,7 +22,7 @@ public class Plane {
         for (int i=0; i < rowNumber; i++) {
             List<PlaneSeat> rowSeats = new ArrayList<>();
             for (int j=0; j<rowSize; j++){
-                rowSeats.add(new PlaneSeat(i,j));
+                rowSeats.add(new PlaneSeat(i * rowSize + j, i,j));
             }
             this.seats.put(i, rowSeats);
         }
