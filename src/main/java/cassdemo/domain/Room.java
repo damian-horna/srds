@@ -3,7 +3,7 @@ package cassdemo.domain;
 public class Room {
     public int id;
     public int capacity;
-    public boolean available = false;
+    public boolean available = true;
 
     public Room(int id, int capacity) {
         this.id = id;

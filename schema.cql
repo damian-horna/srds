@@ -18,7 +18,7 @@ CREATE TABLE srds.available_hotel_rooms_by_city_and_capacity (
     capacity int,
     hotel_id int,
     available boolean,
-    PRIMARY KEY ((city, capacity), available, hotel_id)
+    PRIMARY KEY ((hotel_id, room_id, capacity), available)
 ) WITH comment = 'Q: Find hotel rooms in a given city with specified capacity';
 
 CREATE TABLE srds.available_plane_seats_by_flight (

@@ -12,18 +12,18 @@ public class Hotel {
         this.id = id;
         this.city = city;
         int id_base = 0;
-        id_base = addRoomsWithCapacity(numOfRooms1, id_base);
-        id_base = addRoomsWithCapacity(numOfRooms2, id_base);
-        id_base = addRoomsWithCapacity(numOfRooms3, id_base);
-        id_base = addRoomsWithCapacity(numOfRooms4, id_base);
-        id_base = addRoomsWithCapacity(numOfRooms5, id_base);
-        addRoomsWithCapacity(numOfRooms6, id_base);
+        id_base = addRoomsWithCapacity(1, numOfRooms1, id_base);
+        id_base = addRoomsWithCapacity(2, numOfRooms2, id_base);
+        id_base = addRoomsWithCapacity(3, numOfRooms3, id_base);
+        id_base = addRoomsWithCapacity(4, numOfRooms4, id_base);
+        id_base = addRoomsWithCapacity(5, numOfRooms5, id_base);
+        addRoomsWithCapacity(6, numOfRooms6, id_base);
     }
 
-    private int addRoomsWithCapacity(int capacity, int id_base) {
-        for (int i = 0; i < capacity; i++) {
+    private int addRoomsWithCapacity(int capacity, int numOfRooms, int id_base) {
+        for (int i = 0; i < numOfRooms; i++) {
             rooms.add(new Room(id_base + i, capacity));
         }
-        return id_base + capacity;
+        return id_base + numOfRooms;
     }
 }
