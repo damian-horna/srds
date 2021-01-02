@@ -1,11 +1,11 @@
-151  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
-357  INFO  c.datastax.driver.core.ClockFactory: Using native clock to generate timestamps.
-572  INFO  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport in the classpath, using it
-800  INFO  com.datastax.driver.core.Cluster: Cannot connect with protocol version V4, trying with V3
-804  INFO  com.datastax.driver.core.Cluster: Cannot connect with protocol version V3, trying with V2
-859  INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
-859  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
-860  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.2:9042 added
-860  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.3:9042 added
-860  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.4:9042 added
-889  INFO  cassdemo.backend.BackendSession: Statements prepared
+160  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
+316  INFO  c.datastax.driver.core.ClockFactory: Using native clock to generate timestamps.
+401  INFO  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport in the classpath, using it
+588  INFO  com.datastax.driver.core.Cluster: Cannot connect with protocol version V4, trying with V3
+592  INFO  com.datastax.driver.core.Cluster: Cannot connect with protocol version V3, trying with V2
+649  INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+650  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
+650  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.2:9042 added
+650  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.3:9042 added
+650  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.4:9042 added
+680  INFO  cassdemo.backend.BackendSession: Statements prepared

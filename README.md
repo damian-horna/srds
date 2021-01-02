@@ -41,3 +41,8 @@ All flights happen in the same day, no need to worry about dates too much
 2. Randomly pick up a flight and look up free groups of 4 adjacent seats only if hotel room is available as well
 3. Book both the group of seats and hotel room
 4. At the end: Check if booked successfully for statistics
+
+### Tables:
+plane_seats_by_flight_and_group_size -> to book a group (1-6) of seats
+
+hotel_rooms_by_city_and_capacity -> to book one of the rooms with specified capacity in a given city 

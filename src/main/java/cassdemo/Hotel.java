@@ -11,17 +11,19 @@ public class Hotel {
     public Hotel(int id, String city, int numOfRooms1, int numOfRooms2, int numOfRooms3, int numOfRooms4, int numOfRooms5, int numOfRooms6) {
         this.id = id;
         this.city = city;
-        addRoomsWithCapacity(numOfRooms1);
-        addRoomsWithCapacity(numOfRooms2);
-        addRoomsWithCapacity(numOfRooms3);
-        addRoomsWithCapacity(numOfRooms4);
-        addRoomsWithCapacity(numOfRooms5);
-        addRoomsWithCapacity(numOfRooms6);
+        int id_base = 0;
+        id_base = addRoomsWithCapacity(numOfRooms1, id_base);
+        id_base = addRoomsWithCapacity(numOfRooms2, id_base);
+        id_base = addRoomsWithCapacity(numOfRooms3, id_base);
+        id_base = addRoomsWithCapacity(numOfRooms4, id_base);
+        id_base = addRoomsWithCapacity(numOfRooms5, id_base);
+        addRoomsWithCapacity(numOfRooms6, id_base);
     }
 
-    private void addRoomsWithCapacity(int capacity) {
+    private int addRoomsWithCapacity(int capacity, int id_base) {
         for (int i = 0; i < capacity; i++) {
-            rooms.add(new Room(capacity));
+            rooms.add(new Room(id_base + i, capacity));
         }
+        return id_base + capacity;
     }
 }
