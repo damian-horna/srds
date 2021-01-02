@@ -1,4 +1,5 @@
-package cassdemo;
+package cassdemo.domain;
+
 
 public class Flight {
     public int id;

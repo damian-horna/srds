@@ -1,4 +1,4 @@
-package cassdemo;
+package cassdemo.domain;
 
 public class PlaneSeat {
     public int id;

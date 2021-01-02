@@ -1,4 +1,4 @@
-package cassdemo;
+package cassdemo.domain;
 
 import java.util.ArrayList;
 import java.util.List;

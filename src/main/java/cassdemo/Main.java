@@ -5,6 +5,9 @@ import java.util.Properties;
 
 import cassdemo.backend.BackendException;
 import cassdemo.backend.BackendSession;
+import cassdemo.domain.Flight;
+import cassdemo.domain.Hotel;
+import cassdemo.domain.Plane;
 
 public class Main {
 
