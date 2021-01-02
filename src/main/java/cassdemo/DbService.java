@@ -4,6 +4,7 @@ import cassdemo.backend.BackendSession;
 import cassdemo.domain.Flight;
 import cassdemo.domain.Hotel;
 import cassdemo.domain.PlaneSeat;
+import cassdemo.domain.Room;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
@@ -51,6 +52,22 @@ public class DbService {
     }
 
     public void addHotel(Hotel h) {
+        // Insert hotel
+        PreparedStatement INSERT_INTO_HOTELS = backendSession
+                .session
+                .prepare("INSERT INTO hotels (id, city) VALUES (?, ?);");
+        BoundStatement bs1 = new BoundStatement(INSERT_INTO_HOTELS);
+        bs1.bind(h.id, h.city);
+        ResultSet rs1 = execute(bs1);
 
+        // Insert rooms
+        PreparedStatement INSERT_INTO_ROOMS = backendSession
+                .session
+                .prepare("INSERT INTO available_hotel_rooms_by_city_and_capacity (room_id, city, capacity, hotel_id, available) VALUES (?,?,?,?,?);");
+        for (Room r: h.rooms){
+            BoundStatement bs2 = new BoundStatement(INSERT_INTO_ROOMS);
+            bs2.bind(r.id, h.city, r.capacity, h.id, r.available);
+            ResultSet rs2 = execute(bs2);
+        }
     }
 }
