@@ -27,9 +27,11 @@ public class Main {
 		Hotel hotel = new Hotel(0, "Madrid", 10,10,10,10,10, 10);
 		Flight flight = new Flight(0, plane, "Warsaw", "Madrid");
 
+		DbService dbService = new DbService(session);
+
 		List<Flight> flights = Arrays.asList(new Flight[]{flight});
 		List<Hotel> hotels = Arrays.asList(new Hotel[]{hotel});
-		new DbInitializer().initializeDb(flights, hotels);
+		new DbInitializer(dbService).initializeDb(flights, hotels);
 
 		// Create NUM_OF_CUSTOMERS threads and start fighting for resources. Each customer:
 		// 1. Looks up available seats (or groups of seats)
