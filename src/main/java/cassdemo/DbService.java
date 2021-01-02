@@ -20,13 +20,17 @@ public class DbService {
 
     public void addFlight(Flight f) {
         // Insert flight
-        PreparedStatement INSERT_INTO_FLIGHTS = backendSession.session.prepare("INSERT INTO flights (id, plane_id, start_city, target_city) VALUES (?, ?, ?, ?);");
+        PreparedStatement INSERT_INTO_FLIGHTS = backendSession
+                .session
+                .prepare("INSERT INTO flights (id, plane_id, start_city, target_city) VALUES (?, ?, ?, ?);");
         BoundStatement bs1 = new BoundStatement(INSERT_INTO_FLIGHTS);
         bs1.bind(f.id, f.plane.id, f.startCity, f.targetCity);
         ResultSet rs1 = execute(bs1);
 
         // Insert seats
-        PreparedStatement INSERT_INTO_SEATS = backendSession.session.prepare("INSERT INTO available_plane_seats_by_flight (plane_id, flight_id, seat_id, available) VALUES (?,?,?,?);");
+        PreparedStatement INSERT_INTO_SEATS = backendSession
+                .session
+                .prepare("INSERT INTO available_plane_seats_by_flight (plane_id, flight_id, seat_id, available) VALUES (?,?,?,?);");
         for (Integer row : f.plane.seats.keySet()) {
             for (PlaneSeat s : f.plane.seats.get(row)) {
                 BoundStatement bs2 = new BoundStatement(INSERT_INTO_SEATS);
