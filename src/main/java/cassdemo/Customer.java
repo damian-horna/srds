@@ -36,6 +36,9 @@ public class Customer implements Runnable {
             case 3:
                 useCase3();
                 break;
+            case 4:
+                useCase4();
+                break;
         }
     }
 
@@ -64,15 +67,30 @@ public class Customer implements Runnable {
             System.out.println("Customer " + this.id + " doing use case 3 reserve didn't find a hotel in city: " + randomFlight.targetCity);
         } else {
             List<Room> allAvailableRooms = this.dbService.selectAllAvailableRoomsInHotelWithCapacity(randomHotel.id, 4);
-            if (allAvailableRooms.isEmpty()){
+            if (allAvailableRooms.isEmpty()) {
                 System.out.println("Customer " + this.id + " doing use case 3 reserve didn't find a room in hotel");
             } else {
                 reserveRandomSeatsInFlight(randomFlight, allPossibleSeats, 3);
                 Room room = allAvailableRooms.get(new Random().nextInt(allAvailableRooms.size()));
-                System.out.println("Customer " + this.id + " doing use case 3 reserve: " + room + "in: " + randomHotel);
+                System.out.println("Customer " + this.id + " doing use case 3 reserve: " + room + " in: " + randomHotel);
                 this.dbService.reserveRoomInHotel(room, randomHotel, this.id);
             }
         }
+    }
+
+
+    public void useCase4() {
+        List<Hotel> hotels = this.dbService.selectAllHotels();
+        Hotel randomHotel = hotels.get(new Random().nextInt(hotels.size()));
+        List<Room> allAvailableRooms = this.dbService.selectAllAvailableRoomsInHotelWithCapacity(randomHotel.id, 1);
+        if (allAvailableRooms.isEmpty()) {
+            System.out.println("Customer " + this.id + " doing use case 4 reserve didn't find a room in hotel");
+        } else {
+            Room room = allAvailableRooms.get(new Random().nextInt(allAvailableRooms.size()));
+            System.out.println("Customer " + this.id + " doing use case 4 reserve: " + room + " in: " + randomHotel);
+            this.dbService.reserveRoomInHotel(room, randomHotel, this.id);
+        }
+
     }
 
     private Flight selectRandomFlight() {

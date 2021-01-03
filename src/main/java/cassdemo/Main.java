@@ -43,8 +43,8 @@ public class Main {
     public static void runCustomers(DbService dbService) {
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < NUM_OF_CUSTOMERS; i++) {
-            int randIntUseCase = ThreadLocalRandom.current().nextInt(1, 3 + 1);
-            Customer c = new Customer(i, 3, dbService);
+            int randIntUseCase = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+            Customer c = new Customer(i, 4, dbService);
             Thread t = new Thread(c);
             t.start();
             threads.add(t);

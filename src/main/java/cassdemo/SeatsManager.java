@@ -8,7 +8,6 @@ import static java.lang.Math.abs;
 public class SeatsManager {
     public static List<List<Integer>> findAllPossibleSeatsGroups(List<Integer> availableSeats, int groupSize) {
         List<List<Integer>> grouped = groupSeatsByRows(availableSeats);
-        System.out.println(grouped);
         List<List<Integer>> allPossibilities = new ArrayList<>();
         int idsToCheck;
         for (List<Integer> row : grouped) {
