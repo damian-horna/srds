@@ -39,7 +39,7 @@ CREATE TABLE srds.seat_reservations_by_customer_id
     plane_id    int,
     flight_id   int,
     customer_id int,
-    PRIMARY KEY ((seat_id), customer_id)
+    PRIMARY KEY ((flight_id), seat_id, customer_id)
 ) WITH comment = 'Q: find/store seat reservations';
 
 CREATE TABLE srds.room_reservations_by_customer_id

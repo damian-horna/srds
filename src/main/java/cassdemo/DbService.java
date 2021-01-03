@@ -93,6 +93,33 @@ public class DbService {
         return hotelsList;
     }
 
+    public List<Integer> selectAllFlightReservations(int flightId) {
+        PreparedStatement SELECT_ALL_FLIGHT_RESERVATIONS = backendSession
+                .session
+                .prepare("select * from seat_reservations_by_customer_id where flight_id=?;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_FLIGHT_RESERVATIONS);
+        bs1.bind(flightId);
+
+        ResultSet rs1 = execute(bs1);
+        List<Integer> reservedSeats = new ArrayList<>();
+        rs1.forEach(r -> reservedSeats.add(r.getInt("seat_id")));
+        return reservedSeats;
+    }
+
+
+    public List<Integer> selectAllHotelReservations(int hotelId) {
+        PreparedStatement SELECT_ALL_ROOM_RESERVATIONS = backendSession
+                .session
+                .prepare("select * from room_reservations_by_customer_id where hotel_id=?;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_ROOM_RESERVATIONS);
+        bs1.bind(hotelId);
+
+        ResultSet rs1 = execute(bs1);
+        List<Integer> reservedRooms = new ArrayList<>();
+        rs1.forEach(r -> reservedRooms.add(r.getInt("room_id")));
+        return reservedRooms;
+    }
+
     public List<Hotel> selectAllHotelsInCity(String targetCity) {
         PreparedStatement SELECT_ALL_HOTELS = backendSession
                 .session

@@ -31,7 +31,7 @@ public class Main {
 
         initializeDb(flights, hotels, dbService);
         runCustomers(dbService);
-        showStats();
+        showStats(dbService);
 
         System.exit(0);
     }
@@ -59,8 +59,23 @@ public class Main {
         }
     }
 
-    public static void showStats() {
+    public static void showStats(DbService dbService) {
         System.out.println("Stats: ...");
+        List<Flight> flights = dbService.selectAllFlights();
+        List<Hotel> hotels = dbService.selectAllHotels();
+        long unique;
+
+        for (Flight flight : flights) {
+            List<Integer> reservedSeats = dbService.selectAllFlightReservations(flight.id);
+            unique = reservedSeats.stream().distinct().count();
+            System.out.println("For " + flight + " sold " + reservedSeats.size() + " tickets. There is no place for " + (reservedSeats.size() - unique) + " people.");
+        }
+
+        for (Hotel hotel : hotels) {
+            List<Integer> reservedSeats = dbService.selectAllHotelReservations(hotel.id);
+            unique = reservedSeats.stream().distinct().count();
+            System.out.println("For " + hotel + " reserved " + reservedSeats.size() + " rooms. " + (reservedSeats.size() - unique) + " of them were duplicated.");
+        }
     }
 
     private static BackendSession createBackendSession() throws BackendException {

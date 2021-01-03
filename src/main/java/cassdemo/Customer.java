@@ -21,7 +21,7 @@ public class Customer implements Runnable {
     @Override
     public void run() {
         try {
-            Thread.sleep((long) (Math.random() * 1000));
+            Thread.sleep((long) (Math.random() * 5000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -64,11 +64,11 @@ public class Customer implements Runnable {
 
         Hotel randomHotel = selectRandomHotelInCity(randomFlight.targetCity);
         if (randomHotel == null) {
-            System.out.println("Customer " + this.id + " doing use case 3 reserve didn't find a hotel in city: " + randomFlight.targetCity);
+            System.out.println("Customer " + this.id + " doing use case 3 didn't find a hotel in city: " + randomFlight.targetCity);
         } else {
             List<Room> allAvailableRooms = this.dbService.selectAllAvailableRoomsInHotelWithCapacity(randomHotel.id, 4);
             if (allAvailableRooms.isEmpty()) {
-                System.out.println("Customer " + this.id + " doing use case 3 reserve didn't find a room in hotel");
+                System.out.println("Customer " + this.id + " doing use case 3 didn't find a room in hotel");
             } else {
                 reserveRandomSeatsInFlight(randomFlight, allPossibleSeats, 3);
                 Room room = allAvailableRooms.get(new Random().nextInt(allAvailableRooms.size()));
