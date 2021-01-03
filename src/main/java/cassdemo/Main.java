@@ -16,11 +16,11 @@ public class Main {
     private static final int PLANE_ID = 0;
     private static final int ROW_NUMBER = 12;
     private static final int ROW_SIZE = 6;
-    private static final int NUM_OF_CUSTOMERS = 1;
+    private static final int NUM_OF_CUSTOMERS = 70;
 
     public static void main(String[] args) throws BackendException {
         Plane plane = new Plane(PLANE_ID, ROW_NUMBER, ROW_SIZE);
-        Hotel hotel = new Hotel(0, "Madrid", 10, 10, 10, 10, 10, 10);
+        Hotel hotel = new Hotel(0, "Madrid", 5, 5, 5, 5, 5, 5);
         Flight flight = new Flight(0, plane, "Warsaw", "Madrid");
 
         BackendSession session = createBackendSession();
@@ -44,7 +44,7 @@ public class Main {
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < NUM_OF_CUSTOMERS; i++) {
             int randIntUseCase = ThreadLocalRandom.current().nextInt(1, 4 + 1);
-            Customer c = new Customer(i, 4, dbService);
+            Customer c = new Customer(i, randIntUseCase, dbService);
             Thread t = new Thread(c);
             t.start();
             threads.add(t);

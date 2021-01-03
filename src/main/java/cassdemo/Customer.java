@@ -21,7 +21,7 @@ public class Customer implements Runnable {
     @Override
     public void run() {
         try {
-            Thread.sleep((long) (Math.random() * 2000));
+            Thread.sleep((long) (Math.random() * 1000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
