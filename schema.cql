@@ -26,7 +26,7 @@ CREATE TABLE srds.available_plane_seats_by_flight (
     flight_id int,
     seat_id int,
     available boolean,
-    PRIMARY KEY ((flight_id, seat_id), available)
+    PRIMARY KEY ((flight_id), seat_id)
 ) WITH comment = 'Q: find available seats in a given flight/plane';
 
 CREATE TABLE srds.seat_reservations_by_customer_id (
@@ -34,5 +34,5 @@ CREATE TABLE srds.seat_reservations_by_customer_id (
     plane_id int,
     flight_id int,
     customer_id int ,
-    PRIMARY KEY ((customer_id), seat_id)
+    PRIMARY KEY ((seat_id), customer_id)
 ) WITH comment = 'Q: find/store seat reservations';

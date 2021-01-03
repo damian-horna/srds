@@ -5,13 +5,9 @@ import cassdemo.backend.BackendSession;
 import cassdemo.domain.Flight;
 import cassdemo.domain.Hotel;
 import cassdemo.domain.Plane;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
@@ -20,19 +16,18 @@ public class Main {
     private static final int PLANE_ID = 0;
     private static final int ROW_NUMBER = 12;
     private static final int ROW_SIZE = 6;
-    private static final int NUM_OF_CUSTOMERS = 3;
+    private static final int NUM_OF_CUSTOMERS = 20;
 
     public static void main(String[] args) throws IOException, BackendException {
-        BackendSession session = createBackendSession();
-
-        Plane plane = new Plane(session, PLANE_ID, ROW_NUMBER, ROW_SIZE);
+        Plane plane = new Plane(PLANE_ID, Optional.of(ROW_NUMBER), Optional.of(ROW_SIZE));
         Hotel hotel = new Hotel(0, "Madrid", 10, 10, 10, 10, 10, 10);
         Flight flight = new Flight(0, plane, "Warsaw", "Madrid");
 
+        BackendSession session = createBackendSession();
         DbService dbService = new DbService(session);
 
-        List<Flight> flights = Arrays.asList(new Flight[]{flight});
-        List<Hotel> hotels = Arrays.asList(new Hotel[]{hotel});
+        List<Flight> flights = Collections.singletonList(flight);
+        List<Hotel> hotels = Collections.singletonList(hotel);
 
         initializeDb(flights, hotels, dbService);
         runCustomers(dbService);
@@ -49,17 +44,17 @@ public class Main {
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < NUM_OF_CUSTOMERS; i++) {
             int randIntUseCase = ThreadLocalRandom.current().nextInt(1, 3 + 1);
-            Customer c = new Customer(i, randIntUseCase, dbService);
+            Customer c = new Customer(i, 1, dbService);
             Thread t = new Thread(c);
             t.start();
             threads.add(t);
         }
 
         for (Thread t : threads) {
-			try {
-			    t.join();
-            } catch (InterruptedException e){
-			    e.printStackTrace();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -68,7 +63,6 @@ public class Main {
         System.out.println("Stats: ...");
     }
 
-    @NotNull
     private static BackendSession createBackendSession() throws BackendException {
         String contactPoint = null;
         String keyspace = null;

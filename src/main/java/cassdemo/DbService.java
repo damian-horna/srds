@@ -1,15 +1,16 @@
 package cassdemo;
 
 import cassdemo.backend.BackendSession;
-import cassdemo.domain.Flight;
-import cassdemo.domain.Hotel;
-import cassdemo.domain.PlaneSeat;
-import cassdemo.domain.Room;
+import cassdemo.domain.*;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class DbService {
     BackendSession backendSession;
@@ -64,10 +65,64 @@ public class DbService {
         PreparedStatement INSERT_INTO_ROOMS = backendSession
                 .session
                 .prepare("INSERT INTO available_hotel_rooms_by_city_and_capacity (room_id, city, capacity, hotel_id, available) VALUES (?,?,?,?,?);");
-        for (Room r: h.rooms){
+        for (Room r : h.rooms) {
             BoundStatement bs2 = new BoundStatement(INSERT_INTO_ROOMS);
             bs2.bind(r.id, h.city, r.capacity, h.id, r.available);
             ResultSet rs2 = execute(bs2);
         }
+    }
+
+    public List<Flight> selectAllFlights() {
+        PreparedStatement SELECT_ALL_FLIGHTS = backendSession
+                .session
+                .prepare("SELECT * from flights;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_FLIGHTS);
+        ResultSet rs1 = execute(bs1);
+
+        List<Flight> flightsList = new ArrayList<>();
+        rs1.forEach(r -> {
+            flightsList.add(
+                    new Flight(
+                            r.getInt("id"),
+                            new Plane(r.getInt("plane_id"), Optional.empty(), Optional.empty()),
+                            r.getString("start_city"),
+                            r.getString("target_city")
+                    ));
+        });
+        return flightsList;
+    }
+
+    public List<Integer> selectAllAvailableSeatsInFlight(int flightId) {
+        PreparedStatement SELECT_ALL_AVAILABLE_SEATS = backendSession
+                .session
+                .prepare("SELECT * from available_plane_seats_by_flight WHERE flight_id=?;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_AVAILABLE_SEATS);
+        bs1.bind(flightId);
+        ResultSet rs1 = execute(bs1);
+
+        List<Integer> seatsIds = new ArrayList<>();
+        rs1.forEach(r -> {
+            if (r.getBool("available")){
+                seatsIds.add(r.getInt("seat_id"));
+            }
+        });
+
+        return seatsIds;
+    }
+
+    public void reserveSeatInFlight(Integer seatId, Flight flight, Integer customerId) {
+        PreparedStatement INSERT_INTO_SEATS = backendSession
+                .session
+                .prepare("INSERT INTO available_plane_seats_by_flight (plane_id, flight_id, seat_id, available) VALUES (?,?,?,?);");
+        BoundStatement bs1 = new BoundStatement(INSERT_INTO_SEATS);
+        bs1.bind(flight.plane.id, flight.id, seatId, false);
+        execute(bs1);
+
+        PreparedStatement INSERT_INTO_SEATS_RESERVATION = backendSession
+                .session
+                .prepare("INSERT INTO seat_reservations_by_customer_id (seat_id, customer_id, flight_id, plane_id) VALUES (?,?,?,?);");
+        BoundStatement bs2 = new BoundStatement(INSERT_INTO_SEATS_RESERVATION);
+        bs2.bind(seatId, customerId, flight.id, flight.plane.id);
+        execute(bs2);
     }
 }
