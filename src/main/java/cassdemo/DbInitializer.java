@@ -1,6 +1,5 @@
 package cassdemo;
 
-import cassdemo.backend.BackendSession;
 import cassdemo.domain.Flight;
 import cassdemo.domain.Hotel;
 
@@ -13,6 +12,8 @@ public class DbInitializer {
     }
 
     public void initializeDb(List<Flight> flights, List<Hotel> hotels) {
+        this.dbService.cleanReservations();
+
         for (Flight f : flights){
             System.out.printf("Adding flight %d to DB%n", f.id);
             dbService.addFlight(f);

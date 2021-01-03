@@ -8,6 +8,11 @@ public class Hotel {
     public List<Room> rooms = new ArrayList<>();
     public String city;
 
+    public Hotel(int id, String city) {
+        this.id = id;
+        this.city = city;
+    }
+
     public Hotel(int id, String city, int numOfRooms1, int numOfRooms2, int numOfRooms3, int numOfRooms4, int numOfRooms5, int numOfRooms6) {
         this.id = id;
         this.city = city;
@@ -25,5 +30,13 @@ public class Hotel {
             rooms.add(new Room(id_base + i, capacity));
         }
         return id_base + numOfRooms;
+    }
+
+    @Override
+    public String toString() {
+        return "Hotel{" +
+                "id=" + id +
+                ", city='" + city + '\'' +
+                '}';
     }
 }
