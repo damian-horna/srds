@@ -5,13 +5,9 @@ import cassdemo.backend.BackendSession;
 import cassdemo.domain.Flight;
 import cassdemo.domain.Hotel;
 import cassdemo.domain.Plane;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
@@ -20,23 +16,22 @@ public class Main {
     private static final int PLANE_ID = 0;
     private static final int ROW_NUMBER = 12;
     private static final int ROW_SIZE = 6;
-    private static final int NUM_OF_CUSTOMERS = 3;
+    private static final int NUM_OF_CUSTOMERS = 70;
 
-    public static void main(String[] args) throws IOException, BackendException {
-        BackendSession session = createBackendSession();
-
-        Plane plane = new Plane(session, PLANE_ID, ROW_NUMBER, ROW_SIZE);
-        Hotel hotel = new Hotel(0, "Madrid", 10, 10, 10, 10, 10, 10);
+    public static void main(String[] args) throws BackendException {
+        Plane plane = new Plane(PLANE_ID, ROW_NUMBER, ROW_SIZE);
+        Hotel hotel = new Hotel(0, "Madrid", 5, 5, 5, 5, 5, 5);
         Flight flight = new Flight(0, plane, "Warsaw", "Madrid");
 
+        BackendSession session = createBackendSession();
         DbService dbService = new DbService(session);
 
-        List<Flight> flights = Arrays.asList(new Flight[]{flight});
-        List<Hotel> hotels = Arrays.asList(new Hotel[]{hotel});
+        List<Flight> flights = Collections.singletonList(flight);
+        List<Hotel> hotels = Collections.singletonList(hotel);
 
         initializeDb(flights, hotels, dbService);
         runCustomers(dbService);
-        showStats();
+        showStats(dbService);
 
         System.exit(0);
     }
@@ -48,7 +43,7 @@ public class Main {
     public static void runCustomers(DbService dbService) {
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < NUM_OF_CUSTOMERS; i++) {
-            int randIntUseCase = ThreadLocalRandom.current().nextInt(1, 3 + 1);
+            int randIntUseCase = ThreadLocalRandom.current().nextInt(1, 4 + 1);
             Customer c = new Customer(i, randIntUseCase, dbService);
             Thread t = new Thread(c);
             t.start();
@@ -56,19 +51,33 @@ public class Main {
         }
 
         for (Thread t : threads) {
-			try {
-			    t.join();
-            } catch (InterruptedException e){
-			    e.printStackTrace();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    public static void showStats() {
+    public static void showStats(DbService dbService) {
         System.out.println("Stats: ...");
+        List<Flight> flights = dbService.selectAllFlights();
+        List<Hotel> hotels = dbService.selectAllHotels();
+        long unique;
+
+        for (Flight flight : flights) {
+            List<Integer> reservedSeats = dbService.selectAllFlightReservations(flight.id);
+            unique = reservedSeats.stream().distinct().count();
+            System.out.println("For " + flight + " sold " + reservedSeats.size() + " tickets. There is no place for " + (reservedSeats.size() - unique) + " people.");
+        }
+
+        for (Hotel hotel : hotels) {
+            List<Integer> reservedSeats = dbService.selectAllHotelReservations(hotel.id);
+            unique = reservedSeats.stream().distinct().count();
+            System.out.println("For " + hotel + " reserved " + reservedSeats.size() + " rooms. " + (reservedSeats.size() - unique) + " of them were duplicated.");
+        }
     }
 
-    @NotNull
     private static BackendSession createBackendSession() throws BackendException {
         String contactPoint = null;
         String keyspace = null;

@@ -52,6 +52,11 @@ All flights happen in the same day, no need to worry about dates too much
 3. Book both the group of seats and hotel room
 4. At the end: Check if booked successfully for statistics
 
+### Sample use case #4
+1. Thomas is already in the city and is looking for a room
+2. Randomly select a hotel and book a room if available
+3. At the end: Check if booked successfully for statistics
+
 ### Tables:
 available_plane_seats_by_flight -> to book a group of seats if possible
 

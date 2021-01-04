@@ -13,4 +13,13 @@ public class Flight {
         this.startCity = startCity;
         this.targetCity = targetCity;
     }
+
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "id=" + id +
+                ", startCity='" + startCity + '\'' +
+                ", targetCity='" + targetCity + '\'' +
+                '}';
+    }
 }
