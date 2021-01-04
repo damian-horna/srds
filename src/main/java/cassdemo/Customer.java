@@ -128,6 +128,7 @@ public class Customer implements Runnable {
                     } else {
                         cancelSeatsReservation(chosenSeats, randomFlight);
                         this.dbService.removeRoomReservation(room, randomHotel, this.id);
+                        System.out.println("Remove room reservation, customer: " + this.id + " room: " + room + " case: " + 3);
                     }
                 } else {
                     System.out.println("Customer " + this.id + " didn't find seats in flight: " + randomFlight);
@@ -156,6 +157,7 @@ public class Customer implements Runnable {
             if (isHotelReservedOnlyByMe(randomHotel, room)) {
                 this.iterations = 10;
             } else {
+                System.out.println("Remove room reservation, customer: " + this.id + " room: " + room + " case: " + 4);
                 this.dbService.removeRoomReservation(room, randomHotel, this.id);
             }
         }
@@ -163,7 +165,7 @@ public class Customer implements Runnable {
 
 
     private void cancelSeatsReservation(List<Integer> chosenSeats, Flight randomFlight) {
-        System.out.println("Remove seat reservation ");
+        System.out.println("Remove seat reservation : " + chosenSeats + " from flight: " + randomFlight + " customer: " + this.id);
         for (Integer seat : chosenSeats) {
             this.dbService.removeSeatReservationInFlight(seat, randomFlight, this.id);
         }
