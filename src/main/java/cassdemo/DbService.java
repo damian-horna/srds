@@ -31,11 +31,11 @@ public class DbService {
         // Insert seats
         PreparedStatement INSERT_INTO_SEATS = backendSession
                 .session
-                .prepare("INSERT INTO available_plane_seats_by_flight (plane_id, flight_id, seat_id, available) VALUES (?,?,?,?);");
+                .prepare("UPDATE available_plane_seats_by_flight SET available=available+1 where flight_id=? and seat_id=?;");
         for (Integer row : f.plane.seats.keySet()) {
             for (PlaneSeat s : f.plane.seats.get(row)) {
                 BoundStatement bs2 = new BoundStatement(INSERT_INTO_SEATS);
-                bs2.bind(f.plane.id, f.id, s.id, s.available);
+                bs2.bind(f.id, s.id);
                 ResultSet rs2 = execute(bs2);
             }
         }
@@ -53,10 +53,10 @@ public class DbService {
         // Insert rooms
         PreparedStatement INSERT_INTO_ROOMS = backendSession
                 .session
-                .prepare("INSERT INTO available_hotel_rooms_by_capacity (room_id, city, capacity, hotel_id, available) VALUES (?,?,?,?,?);");
+                .prepare("UPDATE available_hotel_rooms_by_capacity SET available=available+1 WHERE room_id=? and capacity=? and hotel_id=?;");
         for (Room r : h.rooms) {
             BoundStatement bs2 = new BoundStatement(INSERT_INTO_ROOMS);
-            bs2.bind(r.id, h.city, r.capacity, h.id, r.available);
+            bs2.bind(r.id, r.capacity, h.id);
             execute(bs2);
         }
     }
@@ -146,7 +146,7 @@ public class DbService {
 
         List<Integer> seatsIds = new ArrayList<>();
         rs1.forEach(r -> {
-            if (r.getBool("available")) {
+            if (r.getLong("available") == 1) {
                 seatsIds.add(r.getInt("seat_id"));
             }
         });
@@ -157,9 +157,10 @@ public class DbService {
     public void reserveSeatInFlight(Integer seatId, Flight flight, Integer customerId) {
         PreparedStatement INSERT_INTO_SEATS = backendSession
                 .session
-                .prepare("INSERT INTO available_plane_seats_by_flight (plane_id, flight_id, seat_id, available) VALUES (?,?,?,?);");
+                .prepare("UPDATE available_plane_seats_by_flight SET available = available + 1 WHERE flight_id = ? and seat_id = ?;");
+
         BoundStatement bs1 = new BoundStatement(INSERT_INTO_SEATS);
-        bs1.bind(flight.plane.id, flight.id, seatId, false);
+        bs1.bind(flight.id, seatId);
         execute(bs1);
 
         PreparedStatement INSERT_INTO_SEATS_RESERVATION = backendSession
@@ -173,9 +174,9 @@ public class DbService {
     public void reserveRoomInHotel(Room room, Hotel randomHotel, Integer customerId) {
         PreparedStatement INSERT_INTO_ROOMS = backendSession
                 .session
-                .prepare("INSERT INTO available_hotel_rooms_by_capacity (hotel_id, capacity, room_id, available, city) VALUES (?,?,?,?,?);");
+                .prepare("UPDATE available_hotel_rooms_by_capacity SET available = available + 1 WHERE hotel_id = ? and capacity = ? and room_id = ?;");
         BoundStatement bs1 = new BoundStatement(INSERT_INTO_ROOMS);
-        bs1.bind(randomHotel.id, room.capacity, room.id, false, randomHotel.city);
+        bs1.bind(randomHotel.id, room.capacity, room.id);
         execute(bs1);
 
         PreparedStatement INSERT_INTO_ROOM_RESERVATION = backendSession
@@ -199,6 +200,30 @@ public class DbService {
                 .prepare("TRUNCATE room_reservations_by_customer_id;");
         BoundStatement bs2 = new BoundStatement(TRUNCATE_RESERVATION_ROOMS);
         execute(bs2);
+
+        PreparedStatement TRUNCATE_HOTELS = backendSession
+                .session
+                .prepare("TRUNCATE hotels;");
+        BoundStatement bs3 = new BoundStatement(TRUNCATE_HOTELS);
+        execute(bs3);
+
+        PreparedStatement TRUNCATE_FLIGHTS = backendSession
+                .session
+                .prepare("TRUNCATE flights;");
+        BoundStatement bs4 = new BoundStatement(TRUNCATE_FLIGHTS);
+        execute(bs4);
+
+        PreparedStatement TRUNCATE_AVAIL_FLIGHTS = backendSession
+                .session
+                .prepare("TRUNCATE available_plane_seats_by_flight;");
+        BoundStatement bs5 = new BoundStatement(TRUNCATE_AVAIL_FLIGHTS);
+        execute(bs5);
+
+        PreparedStatement TRUNCATE_AVAIL_ROOMS = backendSession
+                .session
+                .prepare("TRUNCATE available_hotel_rooms_by_capacity;");
+        BoundStatement bs6 = new BoundStatement(TRUNCATE_AVAIL_ROOMS);
+        execute(bs6);
     }
 
     public List<Room> selectAllAvailableRoomsInHotelWithCapacity(int hotelId, int capacity) {
@@ -211,7 +236,7 @@ public class DbService {
 
         List<Room> rooms = new ArrayList<>();
         rs1.forEach(r -> {
-            if (r.getBool("available")) {
+            if (r.getLong("available") == 1) {
                 rooms.add(new Room(r.getInt("room_id"), r.getInt("capacity")));
             }
         });
