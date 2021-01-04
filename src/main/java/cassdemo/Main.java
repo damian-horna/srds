@@ -16,7 +16,7 @@ public class Main {
     private static final int PLANE_ID = 0;
     private static final int ROW_NUMBER = 12;
     private static final int ROW_SIZE = 6;
-    private static final int NUM_OF_CUSTOMERS = 70;
+    private static final int NUM_OF_CUSTOMERS = 150;
 
     public static void main(String[] args) throws BackendException {
         Plane plane = new Plane(PLANE_ID, ROW_NUMBER, ROW_SIZE);

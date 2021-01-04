@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class DbService {
     BackendSession backendSession;
@@ -158,7 +159,6 @@ public class DbService {
         PreparedStatement INSERT_INTO_SEATS = backendSession
                 .session
                 .prepare("UPDATE available_plane_seats_by_flight SET available = available + 1 WHERE flight_id = ? and seat_id = ?;");
-
         BoundStatement bs1 = new BoundStatement(INSERT_INTO_SEATS);
         bs1.bind(flight.id, seatId);
         execute(bs1);
@@ -171,6 +171,21 @@ public class DbService {
         execute(bs2);
     }
 
+    public void removeSeatReservationInFlight(Integer seatId, Flight flight, Integer customerId) {
+        PreparedStatement INSERT_INTO_SEATS = backendSession
+                .session
+                .prepare("UPDATE available_plane_seats_by_flight SET available = available - 1 WHERE flight_id = ? and seat_id = ?;");
+        BoundStatement bs1 = new BoundStatement(INSERT_INTO_SEATS);
+        bs1.bind(flight.id, seatId);
+        execute(bs1);
+
+        PreparedStatement INSERT_INTO_SEATS_RESERVATION = backendSession
+                .session
+                .prepare("DELETE FROM seat_reservations_by_customer_id WHERE flight_id=? and seat_id=? and customer_id=?;");
+        BoundStatement bs2 = new BoundStatement(INSERT_INTO_SEATS_RESERVATION);
+        bs2.bind(flight.id, seatId, customerId);
+        execute(bs2);
+    }
     public void reserveRoomInHotel(Room room, Hotel randomHotel, Integer customerId) {
         PreparedStatement INSERT_INTO_ROOMS = backendSession
                 .session
@@ -187,7 +202,22 @@ public class DbService {
         execute(bs2);
 
     }
+    public void removeRoomReservation(Room room, Hotel randomHotel, Integer customerId) {
+        PreparedStatement INSERT_INTO_ROOMS = backendSession
+                .session
+                .prepare("UPDATE available_hotel_rooms_by_capacity SET available = available - 1 WHERE hotel_id = ? and capacity = ? and room_id = ?;");
+        BoundStatement bs1 = new BoundStatement(INSERT_INTO_ROOMS);
+        bs1.bind(randomHotel.id, room.capacity, room.id);
+        execute(bs1);
 
+        PreparedStatement INSERT_INTO_ROOM_RESERVATION = backendSession
+                .session
+                .prepare("DELETE FROM room_reservations_by_customer_id WHERE hotel_id = ? and room_id=? and customer_id=?;");
+        BoundStatement bs2 = new BoundStatement(INSERT_INTO_ROOM_RESERVATION);
+        bs2.bind(randomHotel.id, room.id, customerId);
+        execute(bs2);
+
+    }
     public void cleanReservations() {
         PreparedStatement TRUNCATE_RESERVATION_SEATS = backendSession
                 .session
@@ -256,4 +286,53 @@ public class DbService {
     }
 
 
+    public long getSeatCounter(Integer seatId, Flight randomFlight) {
+        PreparedStatement SELECT_ALL_AVAILABLE_SEATS = backendSession
+                .session
+                .prepare("SELECT * from available_plane_seats_by_flight WHERE flight_id=? and seat_id=?;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_AVAILABLE_SEATS);
+        bs1.bind(randomFlight.id, seatId);
+        ResultSet rs1 = execute(bs1);
+        AtomicLong result = new AtomicLong();
+        rs1.forEach(r -> result.set(r.getLong("available")));
+        return result.get();
+    }
+
+    public List<Integer> selectAllSeatsReservationsWithSeatID(Flight randomFlight, Integer seat) {
+        PreparedStatement SELECT_ALL_FLIGHT_RESERVATIONS = backendSession
+                .session
+                .prepare("select * from seat_reservations_by_customer_id where flight_id=? and seat_id=?;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_FLIGHT_RESERVATIONS);
+        bs1.bind(randomFlight.id, seat);
+
+        ResultSet rs1 = execute(bs1);
+        List<Integer> reservedBy = new ArrayList<>();
+        rs1.forEach(r -> reservedBy.add(r.getInt("customer_id")));
+        return reservedBy;
+    }
+
+    public long getRoomCounter(Hotel randomHotel, Room room) {
+        PreparedStatement SELECT_ALL_ROOM = backendSession
+                .session
+                .prepare("SELECT * from available_hotel_rooms_by_capacity WHERE hotel_id=? and capacity=? and room_id=?;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_ROOM);
+        bs1.bind(randomHotel.id, room.capacity, room.id);
+        ResultSet rs1 = execute(bs1);
+        AtomicLong result = new AtomicLong();
+        rs1.forEach(r -> result.set(r.getLong("available")));
+        return result.get();
+    }
+
+    public List<Integer> selectAllHotelsReservationsReturnCustomerId(Hotel randomHotel, Room room) {
+        PreparedStatement SELECT_ALL_ROOM_RESERVATIONS = backendSession
+                .session
+                .prepare("select * from room_reservations_by_customer_id where hotel_id=? and room_id=?;");
+        BoundStatement bs1 = new BoundStatement(SELECT_ALL_ROOM_RESERVATIONS);
+        bs1.bind(randomHotel.id, room.id);
+
+        ResultSet rs1 = execute(bs1);
+        List<Integer> reservedBy = new ArrayList<>();
+        rs1.forEach(r -> reservedBy.add(r.getInt("customer_id")));
+        return reservedBy;
+    }
 }
