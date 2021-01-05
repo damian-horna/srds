@@ -16,20 +16,18 @@ CREATE TABLE srds.hotels
 
 CREATE TABLE srds.available_plane_seats_by_flight
 (
-    plane_id  int,
     flight_id int,
     seat_id   int,
-    available boolean,
+    available counter,
     PRIMARY KEY ((flight_id), seat_id)
-) WITH comment = 'Q: find available seats in a given flight/plane';
+) WITH comment = 'Q: find available seats in a given flight';
 
 CREATE TABLE srds.available_hotel_rooms_by_capacity
 (
     room_id   int,
-    city      text,
     capacity  int,
     hotel_id  int,
-    available boolean,
+    available counter,
     PRIMARY KEY ((hotel_id), capacity, room_id)
 ) WITH comment = 'Q: Find hotel rooms in a given city with specified capacity';
 
