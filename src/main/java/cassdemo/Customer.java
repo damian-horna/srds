@@ -8,17 +8,20 @@ import java.util.List;
 import java.util.Random;
 
 public class Customer implements Runnable {
-    private int iterations;
+    public int iterations;
     public int id;
     public int selectedUseCase;
     private final int delay;
     public DbService dbService;
+    public boolean success = false;
+    public int wantedSeats=0;
+    public int wantedRoomSize=0;
 
     public Customer(int id, int selectedUseCase, DbService dbService) {
         this.id = id;
         this.selectedUseCase = selectedUseCase;
         this.dbService = dbService;
-        this.delay = 100;
+        this.delay = 500;
         this.iterations = 0;
     }
 
@@ -26,7 +29,7 @@ public class Customer implements Runnable {
     public void run() {
         while (this.iterations < 5) {
             try {
-                Thread.sleep((long) (Math.random() * 100));
+                Thread.sleep((long) (Math.random() * 5000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -52,6 +55,7 @@ public class Customer implements Runnable {
 
     public void useCase1() {
         System.out.printf("Customer %d doing use case 1\n", this.id);
+        this.wantedSeats = 2;
         Flight randomFlight = selectRandomFlight();
         List<List<Integer>> allPossibleSeats = findGroupOfSeatsInFlight(2, randomFlight);
         if (!allPossibleSeats.isEmpty()) {
@@ -67,6 +71,7 @@ public class Customer implements Runnable {
             }
             if (isFlightReservedOnlyByMe(chosenSeats, randomFlight, this.id)) {
                 this.iterations = 10;
+                this.success = true;
             } else {
                 cancelSeatsReservation(chosenSeats, randomFlight);
             }
@@ -75,9 +80,9 @@ public class Customer implements Runnable {
         }
     }
 
-
     public void useCase2() {
         System.out.printf("Customer %d doing use case 2\n", this.id);
+        this.wantedSeats = 1;
         Flight randomFlight = selectRandomFlight();
         List<List<Integer>> allPossibleSeats = findGroupOfSeatsInFlight(1, randomFlight);
         if (!allPossibleSeats.isEmpty()) {
@@ -93,6 +98,7 @@ public class Customer implements Runnable {
             }
             if (isFlightReservedOnlyByMe(chosenSeats, randomFlight, this.id)) {
                 this.iterations = 10;
+                this.success = true;
             } else {
                 cancelSeatsReservation(chosenSeats, randomFlight);
             }
@@ -103,6 +109,8 @@ public class Customer implements Runnable {
 
     public void useCase3() {
         System.out.printf("Customer %d doing use case 3\n", this.id);
+        this.wantedSeats = 4;
+        this.wantedRoomSize = 4;
         Flight randomFlight = selectRandomFlight();
         List<List<Integer>> allPossibleSeats = findGroupOfSeatsInFlight(4, randomFlight);
 
@@ -125,6 +133,7 @@ public class Customer implements Runnable {
                     System.out.println("Customer " + this.id + " doing use case 3 reserve: " + room + " in: " + randomHotel);
                     if (isFlightReservedOnlyByMe(chosenSeats, randomFlight, this.id) && isHotelReservedOnlyByMe(randomHotel, room)) {
                         this.iterations = 10;
+                        this.success = true;
                     } else {
                         cancelSeatsReservation(chosenSeats, randomFlight);
                         this.dbService.removeRoomReservation(room, randomHotel, this.id);
@@ -137,8 +146,9 @@ public class Customer implements Runnable {
         }
     }
 
-
     public void useCase4() {
+        System.out.printf("Customer %d doing use case 4\n", this.id);
+        this.wantedRoomSize = 1;
         List<Hotel> hotels = this.dbService.selectAllHotels();
         Hotel randomHotel = hotels.get(new Random().nextInt(hotels.size()));
         List<Room> allAvailableRooms = this.dbService.selectAllAvailableRoomsInHotelWithCapacity(randomHotel.id, 1);
@@ -156,6 +166,7 @@ public class Customer implements Runnable {
             }
             if (isHotelReservedOnlyByMe(randomHotel, room)) {
                 this.iterations = 10;
+                this.success = true;
             } else {
                 System.out.println("Remove room reservation, customer: " + this.id + " room: " + room + " case: " + 4);
                 this.dbService.removeRoomReservation(room, randomHotel, this.id);
@@ -205,7 +216,7 @@ public class Customer implements Runnable {
         return hotels.get(new Random().nextInt(hotels.size()));
     }
 
-    private List<List<Integer>> findGroupOfSeatsInFlight(int groupSize, Flight flight) {
+    public List<List<Integer>> findGroupOfSeatsInFlight(int groupSize, Flight flight) {
         List<Integer> availableSeats = this.dbService.selectAllAvailableSeatsInFlight(flight.id);
         return SeatsManager.findAllPossibleSeatsGroups(availableSeats, groupSize);
     }
